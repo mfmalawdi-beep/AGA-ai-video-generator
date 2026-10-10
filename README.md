@@ -293,6 +293,47 @@ The video may have no detectable speech, or it may be in a language Whisper stru
 ### Looking for better results?
 The [AI Clipping API](https://muapi.ai/playground/ai-clipping) uses an improved algorithm that produces higher-quality clips with better highlight detection.
 
+## Deployment
+
+This is a full-stack app: a **Next.js frontend** (`client/`) and a **Python FastAPI backend** (`server/` + `main.py` + `shorts_generator/`). The frontend and backend are deployed separately.
+
+> **Note:** Serverless static hosts (Netlify, Vercel) can only host the frontend. The backend needs a real Python server with ffmpeg and long-running background jobs — use Render, Railway, or Fly.io for it.
+
+### 1. Backend → Render (or Railway / Fly.io)
+
+This repo includes a `Dockerfile` (Python + ffmpeg, all dependencies) and a `render.yaml` blueprint.
+
+1. Push this repo to GitHub.
+2. Go to [dashboard.render.com](https://dashboard.render.com) → **New** → **Blueprint** → connect this repo (Render auto-detects `render.yaml`).
+3. In the blueprint setup, set the secret environment variables when prompted:
+   - `MUAPI_API_KEY` — required for API mode (default)
+   - `OPENAI_API_KEY` — only needed for `--mode local`
+4. Deploy. Your backend URL will be `https://shorts-generator-api.onrender.com` (verify `/docs` loads — that's the FastAPI UI).
+5. `PUBLIC_BASE_URL` is wired automatically from the service's hostname (only used for local-mode clip URLs).
+
+> The Dockerfile works the same way on Railway and Fly.io (`fly launch` detects it).
+
+### 2. Frontend → Vercel (or Netlify)
+
+1. Go to [vercel.com/new](https://vercel.com/new) → import this repo.
+2. **Set the Root Directory to `client`** (the frontend lives in the subdirectory).
+3. Add the environment variable:
+   - `NEXT_PUBLIC_API_URL` = your backend URL from step 1 (e.g. `https://shorts-generator-api.onrender.com`)
+4. Deploy. Vercel auto-detects Next.js — no extra config needed.
+
+For **Netlify**: import the repo with base directory `client`, build command `npm run build`, publish directory `client/.next`, and the same `NEXT_PUBLIC_API_URL` variable.
+
+### Local development (unchanged)
+
+```bash
+# Backend
+pip install -r requirements.txt
+uvicorn server.main:app --reload --port 8000
+
+# Frontend (in another terminal)
+cd client && npm install && npm run dev
+```
+
 ## Contributing
 
 Contributions are welcome! Please fork the repository and submit a pull request.

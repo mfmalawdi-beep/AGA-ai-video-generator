@@ -97,7 +97,9 @@ async def run_shorts_pipeline(job_id: str, request: GenerateRequest):
                 if request.mode == "local" and "shorts" in result_data:
                     # Base URL of this server, used to build public URLs for
                     # locally rendered clips. Set PUBLIC_BASE_URL when deploying.
-                    public_base_url = os.environ.get("PUBLIC_BASE_URL", "http://localhost:8000")
+                    public_base_url = os.environ.get("PUBLIC_BASE_URL", "http://localhost:8000").rstrip("/")
+                    if not public_base_url.startswith("http"):
+                        public_base_url = f"https://{public_base_url}"
                     for short in result_data["shorts"]:
                         # Convert local absolute/relative path to hosted /output/ relative URL path
                         clip_path = short.get("clip_url", "")

@@ -1,0 +1,33 @@
+# Render Blueprint for the FastAPI backend.
+# Deploy: https://dashboard.render.com → New → Blueprint → connect this repo.
+# Render detects this file automatically.
+services:
+  - type: web
+    name: shorts-generator-api
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    # FastAPI exposes /docs; used as the health check endpoint
+    healthCheckPath: /docs
+    envVars:
+      # --- API mode (default) ---
+      # Set this in the Render dashboard (marked "sync: false" = you provide it).
+      - key: MUAPI_API_KEY
+        sync: false
+
+      # --- Local mode (only if you use --mode local) ---
+      - key: LLM_PROVIDER
+        value: openai
+      - key: OPENAI_API_KEY
+        sync: false
+      # - key: GEMINI_API_KEY
+      #   sync: false
+
+      # Public URL of this service, used to build clip URLs in local mode.
+      # Auto-wired from the deployed service's hostname.
+      - key: PUBLIC_BASE_URL
+        fromService:
+          type: web
+          name: shorts-generator-api
+          property: host
