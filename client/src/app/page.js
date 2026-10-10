@@ -140,7 +140,7 @@ export default function Home() {
             <path d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.94 1.5 7.05 4.7 3.44 5.52l.34 3.69L1.35 12l2.43 2.79-.34 3.69 3.61.82 1.89 3.2L12 21.04l3.06 1.46 1.89-3.2 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"/>
           </svg>
           <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-purple-400 to-indigo-300 bg-clip-text text-transparent">
-            ShortsGenerator <span className="text-zinc-500 font-light font-sans text-sm">AI Video Clipper</span>
+            AGA <span className="text-zinc-500 font-light font-sans text-sm">AI Video Generator</span>
           </h1>
         </div>
         <div>
